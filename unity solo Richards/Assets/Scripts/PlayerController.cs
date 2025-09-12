@@ -1,11 +1,14 @@
 using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
     Vector2 cameraRotation;
     Vector3 cameraOffset;
+    public Vector3 respawnPoint;
     InputAction lookVector;
     Camera playerCam;
 
@@ -20,17 +23,28 @@ public class PlayerController : MonoBehaviour
     public float Ysensitivty = 1.0f;
     public float camRotationLimit = 90.0f;
 
+    public int health = 5;
+    public int maxHealth = 5;
+
     public void Start()
     {
         cameraOffset = new Vector3(0, .5f, .5f);
+        respawnPoint = new Vector3(0, 1, 0);
         rb = GetComponent<Rigidbody>();
         playerCam = Camera.main;
         lookVector = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
         cameraRotation = Vector2.zero;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     private void Update()
     {
+        if (health<= 0)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
         // Camera Rotation System
         playerCam.transform.position = transform.position + cameraOffset;
 
@@ -60,5 +74,10 @@ public class PlayerController : MonoBehaviour
 
         verticalMove = inputAxis.y;
         horizontalMove = inputAxis.x;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        
     }
 }
