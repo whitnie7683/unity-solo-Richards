@@ -45,17 +45,22 @@ public class PlayerController : MonoBehaviour
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
-        // Camera Rotation System
-        playerCam.transform.position = transform.position + cameraOffset;
+        /* Camera Rotation System
+        //playerCam.transform.position = transform.position + cameraOffset;
 
         cameraRotation.x += lookVector.ReadValue<Vector2>().x * Xsensitivty;
         cameraRotation.y += lookVector.ReadValue<Vector2>().y * Ysensitivty;
 
         cameraRotation.y = Mathf.Clamp(cameraRotation.y, -camRotationLimit, camRotationLimit);
 
-        playerCam.transform.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
-        transform.localRotation = Quaternion.AngleAxis(cameraRotation.x, Vector3.up);
+        //playerCam.transform.rotation = Quaternion.Euler(-cameraRotation.y, cameraRotation.x, 0);
+        */
 
+        Quaternion playerRotation = Quaternion.identity;
+        playerRotation.y = playerCam.transform.rotation.y;
+
+        transform.localRotation = playerRotation;
+        
 
         // Movement System
         Vector3 temp = rb.velocity;
@@ -78,6 +83,8 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
+        if (other.tag == "killzone")
+            health = 0;
     }
+    
 }
