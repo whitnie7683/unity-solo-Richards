@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     Camera playerCam;
 
     Rigidbody rb;
+    Ray ray;
 
     float verticalMove;
     float horizontalMove;
@@ -22,12 +23,14 @@ public class PlayerController : MonoBehaviour
     public float Xsensitivty = 1.0f;
     public float Ysensitivty = 1.0f;
     public float camRotationLimit = 90.0f;
+    public float climbingTouchDistance = 1f;
 
     public int health = 5;
     public int maxHealth = 5;
 
     public void Start()
     {
+        ray = new Ray(transform.position, transform.forward);
         cameraOffset = new Vector3(0, .5f, .5f);
         respawnPoint = new Vector3(0, 1, 0);
         rb = GetComponent<Rigidbody>();
@@ -58,14 +61,20 @@ public class PlayerController : MonoBehaviour
 
         Quaternion playerRotation = Quaternion.identity;
         playerRotation.y = playerCam.transform.rotation.y;
-
+        playerRotation.w = playerCam.transform.rotation.w;
         transform.localRotation = playerRotation;
-        
+
+        ray.origin = transform.position;
+        ray.direction = transform.forward;
 
         // Movement System
         Vector3 temp = rb.velocity;
 
-        temp.x = verticalMove * speed;
+        if (Physics.Raycast(ray, climbingTouchDistance))
+            temp.y = verticalMove * speed;
+        else
+            temp.x = verticalMove * speed;
+        
         temp.z = horizontalMove * speed;
 
         rb.velocity = (temp.x * transform.forward) +
