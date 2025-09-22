@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
-
 public class PlayerController : MonoBehaviour
 {
     Vector2 cameraRotation;
@@ -67,7 +66,7 @@ public class PlayerController : MonoBehaviour
         playerRotation.w = playerCam.transform.rotation.w;
         transform.localRotation = playerRotation;
 
-        ray.origin = transform.position;
+        ray.origin = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z);
         ray.direction = transform.forward;
 
         jumpRay.origin = transform.position;
@@ -115,7 +114,7 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
 
-        if (collision.gameObject.tag == "hazard")
+        if (collision.gameObject.tag == "hazard" || collision.gameObject.tag == "basic bad")
             health--;
     }
 
@@ -127,4 +126,3 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
-    
