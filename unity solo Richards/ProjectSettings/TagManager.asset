@@ -7,6 +7,9 @@ TagManager:
   - hazard
   - health
   - basic bad
+  - projectile
+  - Weapon
+  - weapon
   layers:
   - Default
   - TransparentFX

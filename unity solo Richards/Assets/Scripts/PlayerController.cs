@@ -14,6 +14,14 @@ public class PlayerController : MonoBehaviour
     Rigidbody rb;
     Ray ray;
     Ray jumpRay;
+    Ray interactRay;
+    RaycastHit interactHit;
+    GameObject pickupObj;
+
+    public PlayerInput input;
+    public Transform weaponSlot;
+    public Weapon currentWeapon;
+
 
     float verticalMove;
     float horizontalMove;
@@ -25,21 +33,23 @@ public class PlayerController : MonoBehaviour
     public float camRotationLimit = 90.0f;
     public float climbingTouchDistance = 1f;
     public float jumpDetectionDistance = 1.1f;
-
+    public float interactDistance = 1f;
     public int health = 5;
     public int maxHealth = 5;
 
     public void Start()
     {
+        input = GetComponent<PlayerInput>();
         ray = new Ray(transform.position, transform.forward);
         jumpRay = new Ray(transform.position, -transform.up);
+        interactRay = new Ray(transform.position, transform.forward);
         cameraOffset = new Vector3(0, .5f, .5f);
         respawnPoint = new Vector3(0, 1, 0);
         rb = GetComponent<Rigidbody>();
         playerCam = Camera.main;
         lookVector = GetComponent<PlayerInput>().currentActionMap.FindAction("Look");
         cameraRotation = Vector2.zero;
-
+        weaponSlot = playerCam.transform.GetChild(0);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
@@ -66,20 +76,28 @@ public class PlayerController : MonoBehaviour
         playerRotation.w = playerCam.transform.rotation.w;
         transform.localRotation = playerRotation;
 
-        ray.origin = new Vector3(transform.position.x, transform.position.y - .5f, transform.position.z);
-        ray.direction = transform.forward;
-
         jumpRay.origin = transform.position;
         jumpRay.direction = -transform.up;
+
+        interactRay.origin = transform.position;
+        interactRay.direction = playerCam.transform.forward;
+
+        if (Physics.Raycast(interactRay, out interactHit, interactDistance))
+        {
+            if (interactHit.collider.gameObject.tag == "weapon")
+            {
+                pickupObj = interactHit.collider.gameObject;
+            }
+
+            Debug.Log(pickupObj.tag);
+        }
+        else
+            pickupObj = null;
 
         // Movement System
         Vector3 temp = rb.velocity;
 
-        if (Physics.Raycast(ray, climbingTouchDistance))
-            temp.y = verticalMove * speed;
-        else
-            temp.x = verticalMove * speed;
-        
+        temp.x = verticalMove * speed;
         temp.z = horizontalMove * speed;
 
         rb.velocity = (temp.x * transform.forward) +
@@ -87,6 +105,36 @@ public class PlayerController : MonoBehaviour
                             (temp.z * transform.right);
     }
 
+    public void Attack()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.fire();
+        }
+    }
+
+    public void Reload()
+    {
+        if (currentWeapon)
+            currentWeapon.reload();
+    }
+    public void Interact()
+    {
+        if (pickupObj)
+        {
+            if (pickupObj.tag == "weapon")
+                pickupObj.GetComponent<Weapon>().equip(this);
+        }
+        else
+            Reload();
+    }
+    public void DropWeapon()
+    {
+        if (currentWeapon)
+        {
+            currentWeapon.GetComponent<Weapon>().unequip();
+        }
+    }
     public void Move(InputAction.CallbackContext context)
     {
         Vector2 inputAxis = context.ReadValue<Vector2>();
