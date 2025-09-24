@@ -22,6 +22,9 @@ public class BasicEnemyController : MonoBehaviour
 }
 [RequireComponent(typeof(NavMeshAgent))]
 public class EnemyAI : MonoBehaviour
+
+
+
 {
     public enum State { Patrol, Chase, Attack, Search }
 

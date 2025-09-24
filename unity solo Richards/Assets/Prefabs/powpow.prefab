@@ -42,7 +42,6 @@ GameObject:
   - component: {fileID: 2330265508854712575}
   - component: {fileID: 432184682615671271}
   - component: {fileID: 4813697659983298194}
-  - component: {fileID: 8755694591192446001}
   - component: {fileID: 8718691217953215594}
   - component: {fileID: 6991236321836747973}
   - component: {fileID: 4273484819113397461}
@@ -121,27 +120,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8755694591192446001
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7553741772492795523}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 5.719967, y: 9.08865, z: 1}
-  m_Center: {x: -0.036764145, y: 0.013809204, z: 0}
 --- !u!54 &8718691217953215594
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -283,6 +261,8 @@ MonoBehaviour:
   firePoint: {fileID: 0}
   firingDirection: {fileID: 0}
   canFire: 1
+  holdToFire: 1
+  Realoading: 0
   weaponID: 0
   weaponName: powpow
   projLifespan: 1
